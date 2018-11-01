@@ -35,7 +35,7 @@ serverConfig.serverMain = function(req, res) {
             statusCode = typeof(statusCode) === 'number' ? statusCode : 400;
             var payloadString = typeof(payload) === 'object' ? JSON.stringify(payload) : '';
 
-            //console.log("Response = ", statusCode, payloadString);
+            console.log("Response = ", statusCode, payloadString);
             
             res.setHeader('Content-Type', 'application/json');
             res.writeHead(statusCode);
@@ -52,7 +52,7 @@ serverConfig.handlers.hello = function(data, callback) {
         serverConfig.handlers.notfound(data, callback);
 
     if (data.body === '') {
-        callback(200, {'message' : 'Hi, there! Greetings from the Hello API!'});
+        serverConfig.handlers.defaultHello(data, callback);
         return;
     }                
 
@@ -64,7 +64,7 @@ serverConfig.handlers.hello = function(data, callback) {
         var fullName = firstName + " " + lastName;        
         
         if (firstName === '' && lastName === '')
-        callback(200, {'message' : 'Hi, there! Greetings from the Hello API!'});
+            serverConfig.handlers.defaultHello(data, callback);
         else
             callback(200, {'message' : 'Hi, ' + fullName.trim() + ' ! Greetings from the Hello API!'});
     } catch(e) {
@@ -74,6 +74,10 @@ serverConfig.handlers.hello = function(data, callback) {
 
 serverConfig.handlers.notfound = function(data, callback) {
     callback(404, {'message' : 'route not found'});
+};
+
+serverConfig.handlers.defaultHello  = function(data, callback) {
+    callback(200, {'message' : 'Hi, there! Greetings from the Hello API!'});
 };
 
 // Server router
